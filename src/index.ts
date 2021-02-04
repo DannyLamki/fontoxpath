@@ -31,6 +31,10 @@ import { Profiler, profiler, XPathPerformanceMeasurement } from './performance';
 import precompileXPath from './precompileXPath';
 import registerCustomXPathFunction from './registerCustomXPathFunction';
 import registerXQueryModule from './registerXQueryModule';
+import internalTypedValueFactory, {
+	ValidValue,
+	ValidValueSequence,
+} from './types/TypedValueFactory';
 import {
 	Attr,
 	CDATASection,
@@ -129,7 +133,26 @@ if (typeof fontoxpathGlobal !== 'undefined') {
 	fontoxpathGlobal['registerCustomXPathFunction'] = registerCustomXPathFunction;
 	fontoxpathGlobal['parseScript'] = parseScript;
 	fontoxpathGlobal['profiler'] = profiler;
+	fontoxpathGlobal['createTypedValueFactory'] = internalTypedValueFactory;
 }
+
+/**
+ * Creates a factory to convert values into a specific type.
+ *
+ * @param  type  The type into which to convert the values.
+ *
+ * @public
+ */
+type ExternalTypedValueFactory = (
+	type: string
+) => (value: ValidValueSequence, domFacade: IDomFacade) => unknown;
+
+/**
+ * Creates a factory to convert values into a specific type.
+ *
+ * @public
+ */
+export const createTypedValueFactory = internalTypedValueFactory as ExternalTypedValueFactory;
 
 export {
 	Attr,
@@ -177,4 +200,7 @@ export {
 	Profiler,
 	profiler,
 	XPathPerformanceMeasurement,
+	ExternalTypedValueFactory,
+	ValidValue,
+	ValidValueSequence,
 };
