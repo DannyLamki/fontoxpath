@@ -1,4 +1,8 @@
 import * as fontoxpath from '../src/index';
+//declare var json2typescript: any;
+//import * as json2typescript from '../../node_modules/json2typescript/index';
+//import XSObject from '../src/xml-schema-api/XSObject';
+import XSObjectFactory from '../src/xml-schema-impl/XSObjectFactory';
 
 const allowXQuery = document.getElementById('allowXQuery') as HTMLInputElement;
 const allowXQueryUpdateFacility = document.getElementById(
@@ -17,6 +21,12 @@ const traceOutput = document.getElementById('traceOutput');
 const domParser = new DOMParser();
 
 let xmlDoc: Document;
+
+function lakmiGreet() {
+	let lakmi = new fontoxpath.LakmiGreeting('Hi...');
+	lakmi.greet();
+}
+
 function setCookie() {
 	const source = encodeURIComponent(xmlSource.innerText);
 	const xpath = encodeURIComponent(xpathField.innerText);
@@ -313,6 +323,82 @@ function loadFromCookie() {
 	xpathField.innerText = decodeURIComponent(cookie.substring(xpathStartOffset));
 }
 
+let _instance: JSON;
+let _typeComponents: JSON;
+
+function fetchModel() {
+    console.log("starting...");
+    let myHeaders: Headers = new Headers();
+    myHeaders.append('Accept', 'application/json, text/plain, */*');
+    myHeaders.append("Content-Type", "application/json");
+
+    let raw: string = JSON.stringify({
+        "transactionUUID":"4d727c24-d2d1-446d-a20b-61024eea798f",
+        "topLevelDirectory":"IFRST_2018-03-16",
+        "zipFileName":"IFRST_2018-03-16.zip",
+        "decompressedDirectory":"IFRST_2018-03-16",
+        "fromTaxonomyPackage":"false",
+        "href":"IFRST_2018-03-16/LakmiSystems-20181231.xml"});
+
+    let requestOptions:RequestInit = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+    fetch("http://localhost:8101/getXBRLModelFromEntryPoint", requestOptions)
+    .then(response => {
+        if (!response.ok) {
+            console.log(response.statusText);
+        }else{
+            console.log("It's ok but not");
+        }
+        return response.json()
+    })
+    .then(result => {
+        //console.log(result);
+        _instance = result.response.instance;
+        _typeComponents = result.response.typeComponents;
+        //console.log(_instance);
+        //console.log(_typeComponents);
+        constructXDM(_instance, _typeComponents);
+    })
+    .catch(error => console.log('error', error));
+}
+function constructXDM(instance: JSON, typeComponents: JSON) {
+    let component: JSON = typeComponents[0];
+    console.log(component);
+	//let XSObjectFactory = new fontoxpath.XSObjectFactory();
+    /*
+	let xsObject:XSObject = jsonConvert.deserializeObject(component, XSObject);
+    console.log(xsObject);
+	*/
+    //let xsModel = new XSModel();
+    //xsModel.fromJSON(typeComponents);
+    /*
+    let documentElement = instance.childNodes[0].childNodes[1];
+    let typeDefinitionId = documentElement.typeDefinition;
+    console.log('typeDefinitionId >> ' + typeDefinitionId);
+    
+    let typeDefinition;
+    typeComponents.some(component => {
+        if(component.id === typeDefinitionId) {
+            console.log(component.id);
+            typeDefinition = component;
+            return true;
+        }else{
+            return false;
+        }
+    });
+    console.log(`${documentElement.prefix}:${documentElement.localName} >> ${typeDefinition.name}`);
+    */
+}
+
 loadFromCookie();
 
 rerunXPath();
+
+lakmiGreet();
+
+fetchModel();

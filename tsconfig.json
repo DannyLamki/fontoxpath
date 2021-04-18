@@ -6,8 +6,11 @@
 		"target": "es2017",
 		"module": "commonjs",
 		"declaration": true,
-		"strict": false
+		"strict": false,
+		"experimentalDecorators": true,
+    	"emitDecoratorMetadata": true,
+		"allowJs": true,
 	},
 	"include": ["./src/**/*"],
-	"exclude": ["./**/*.d.ts"]
+	"exclude": ["./**/*.d.ts", "./node_modules/json2typescript"]
 }

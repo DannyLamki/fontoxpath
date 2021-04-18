@@ -31,6 +31,9 @@ import { Profiler, profiler, XPathPerformanceMeasurement } from './performance';
 import precompileXPath from './precompileXPath';
 import registerCustomXPathFunction from './registerCustomXPathFunction';
 import registerXQueryModule from './registerXQueryModule';
+import LakmiGreeting from './schema-aware/LakmiGreeting';
+//import XSObjectFactory from './xml-schema-impl/XSObjectFactory';
+//import XSObject from './xml-schema-impl/XSObject';
 // We do want to deviate from the actual name which is used internally as we do not want to expose
 // the types which it uses in the public API
 // tslint:disable-next-line: match-default-export-name
@@ -219,4 +222,7 @@ export {
 	profiler,
 	registerCustomXPathFunction,
 	registerXQueryModule,
+	LakmiGreeting,
+	//XSObjectFactory,
+	//XSObject,
 };

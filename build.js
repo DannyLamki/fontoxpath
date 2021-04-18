@@ -1,6 +1,7 @@
 const peg = require('pegjs');
 const fs = require('fs-extra');
 const UglifyJS = require('uglify-js');
+const json2typescript = require('json2typescript');
 
 const ts = require('typescript');
 
@@ -54,7 +55,12 @@ function outputDeclarations() {
 		target: 'es2017',
 		module: 'commonjs',
 		declaration: true,
+		traceResolutions: true,
+		strict: false,
 		emitDeclarationOnly: true,
+		experimentalDecorators: true,
+    	emitDecoratorMetadata: true,
+		allowJs: true,
 	};
 
 	const host = ts.createCompilerHost(options);
@@ -101,7 +107,7 @@ function doModuleBuild() {
 	const api = JSON.parse(fs.readFileSync('dist/fontoxpath.api.json', 'utf-8'));
 	const fontoxpathAPI = api.members.find((member) => member.kind === 'EntryPoint');
 	const members = fontoxpathAPI.members.filter(
-		(member) => member.kind === 'Function' || member.kind === 'Variable'
+		(member) => {member.kind === 'Function' || member.kind === 'Variable'; console.log(member.kind);}
 	);
 
 	const exports = members.map(

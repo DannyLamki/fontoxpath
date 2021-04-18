@@ -102,6 +102,7 @@
 		"uglify-js": "^3.8.0"
 	},
 	"dependencies": {
+		"json2typescript": "^1.4.1",
 		"xspattern": "^2.0.0"
 	}
 }
